@@ -19,7 +19,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// DocGenTool is an opaque type created by CreateDocGenCmdLineTool
+// DocGenTool is an opaque type created by CreateDocGenCmdLineTool.
 type DocGenTool struct {
 	installDirectory string
 	docCmd           *cobra.Command
@@ -47,7 +47,6 @@ func CreateDocGenCmdLineTool(appCmd *cobra.Command) *DocGenTool {
 // that will generate a Bash Completion file for the companion app.  It will
 // support a --directory flag and use the fileName passed into this function.
 func (dg *DocGenTool) AddBashCompletionGenerator(fileName string) *DocGenTool {
-
 	completeCmd := &cobra.Command{
 		Use:   "generate-auto-complete",
 		Args:  cobra.NoArgs,
@@ -64,11 +63,11 @@ func (dg *DocGenTool) AddBashCompletionGenerator(fileName string) *DocGenTool {
 }
 
 // AddDocGenerator will create a subcommand for the utility tool that will
-// generate documentation with the passed in CobraManOptions and templateName.
+// generate documentation with the passed in Options and templateName.
 // It supports a --directory flag for where to place the generated files.  The
 // subcommand will be named generate-<templateName> where templateName is the
 // same as the template used to generate the documentation.
-func (dg *DocGenTool) AddDocGenerator(opts *CobraManOptions, templateName string) *DocGenTool {
+func (dg *DocGenTool) AddDocGenerator(opts *Options, templateName string) *DocGenTool {
 	// Make sure template exists or we will later get runtime panic
 	_, ok := templateMap[templateName]
 	if !ok {
@@ -89,7 +88,7 @@ func (dg *DocGenTool) AddDocGenerator(opts *CobraManOptions, templateName string
 	return dg
 }
 
-// Execute will parse args and execute the command line
+// Execute will parse args and execute the command line.
 func (dg *DocGenTool) Execute() error {
 	return dg.docCmd.Execute()
 }
