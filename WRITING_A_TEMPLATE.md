@@ -1,6 +1,6 @@
 # Writing your own template
 
-Cobra-man uses Go's template system to generate documents.  If you are new to them you should
+Cobraman uses Go's template system to generate documents.  If you are new to them you should
 first check out the core go documentation about templates:
 https://golang.org/pkg/text/template/
 

@@ -15,7 +15,7 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
-	"github.com/rjohnson/cobraman"
+	"github.com/PaddleHQ/cobraman"
 )
 
 func main() {
@@ -27,7 +27,7 @@ func main() {
 		LeftFooter:  "Dofoo " + version,
 		Author:      "Foo Bar <foo@bar.com>",
 		Directory:   "/tmp",
-		Bugs:        `Bugs related to cobra-man can be filed at https://github.com/rjohnson/cobraman`,
+		Bugs:        `Bugs related to cobraman can be filed at https://github.com/PaddleHQ/cobraman`,
 	}
 	err := man.GenerateManPages(cmd.Root(), manOpts)
 	if err != nil {
