@@ -1,9 +1,11 @@
+// Package main generates the documentation for the example application
 package main
 
 import (
-	"github.com/rayjohnson/cobraman"
-	"github.com/rayjohnson/cobraman/example/cmd"
 	"os"
+
+	"github.com/PaddleHQ/cobraman"
+	"github.com/PaddleHQ/cobraman/example/cmd"
 )
 
 func main() {
@@ -13,11 +15,11 @@ func main() {
 	docGenerator := cobraman.CreateDocGenCmdLineTool(appCmds)
 	docGenerator.AddBashCompletionGenerator("zap.sh")
 
-	manOpts := &cobraman.CobraManOptions{
+	manOpts := &cobraman.Options{
 		LeftFooter:   "Example",
 		CenterHeader: "Example Manual",
 		Author:       "Ray Johnson <ray.johnson@gmail.com>",
-		Bugs:         `Bugs related to cobraman can be filed at https://github.com/rayjohnson/cobraman`,
+		Bugs:         `Bugs related to cobraman can be filed at https://github.com/PaddleHQ/cobraman `,
 	}
 	docGenerator.AddDocGenerator(manOpts, "mdoc")
 	docGenerator.AddDocGenerator(manOpts, "troff")
@@ -27,4 +29,3 @@ func main() {
 		os.Exit(1)
 	}
 }
-

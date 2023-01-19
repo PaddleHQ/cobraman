@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+// Package cmd is an example cobra application used to demonstrate the output of cobraman
 package cmd
 
 import (
@@ -26,7 +27,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// boodbyeCmd represents the boodbye command
+// boodbyeCmd represents the boodbye command.
 var boodbyeCmd = &cobra.Command{
 	Use:   "boodbye",
 	Short: "A brief description of your command",

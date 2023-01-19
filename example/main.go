@@ -18,9 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+// Package main creates example documentation
 package main
 
-import "github.com/rayjohnson/cobraman/example/cmd"
+import "github.com/PaddleHQ/cobraman/example/cmd"
 
 func main() {
 	cmd.Execute()

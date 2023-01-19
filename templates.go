@@ -39,12 +39,12 @@ var templateFuncs = template.FuncMap{
 	"rpad":           rpad,
 }
 
-// AddTemplateFunc adds a template function that's available to doc templates
+// AddTemplateFunc adds a template function that's available to doc templates.
 func AddTemplateFunc(name string, tmplFunc interface{}) {
 	templateFuncs[name] = tmplFunc
 }
 
-// AddTemplateFuncs adds multiple template functions that are available to doc templates
+// AddTemplateFuncs adds multiple template functions that are available to doc templates.
 func AddTemplateFuncs(tmplFuncs template.FuncMap) {
 	for k, v := range tmplFuncs {
 		templateFuncs[k] = v
@@ -66,7 +66,7 @@ func RegisterTemplate(name string, separator string, extension string, templateS
 	templateMap[name] = t
 }
 
-func getTemplate(name string) (string, string, *template.Template) {
+func getTemplate(name string) (sep string, ext string, tmpl *template.Template) {
 	t := templateMap[name]
 	return t.separator, t.extension, t.template
 }

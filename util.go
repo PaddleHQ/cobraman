@@ -54,11 +54,11 @@ func backslashify(str string) string {
 }
 
 func dashify(str string) string {
-	return strings.Replace(str, " ", "-", -1)
+	return strings.ReplaceAll(str, " ", "-")
 }
 
 func underscoreify(str string) string {
-	return strings.Replace(str, " ", "_", -1)
+	return strings.ReplaceAll(str, " ", "_")
 }
 
 func trimRightSpace(s string) string {

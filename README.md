@@ -38,7 +38,7 @@ func main() {
 
 That will get you a man page `/tmp/dofoo.1`
 
-GoDoc has the full API documentation [here](https://godoc.org/github.com/rayjohnson/cobraman).  Be sure to checkout the documentation for CobraManOptions as it provides many options to control the output.
+GoDoc has the full API documentation [here](https://godoc.org/github.com/PaddleHQ/cobraman).  Be sure to checkout the documentation for CobraManOptions as it provides many options to control the output.
 
 There is also an example directory with a simple dummy application that shows some of the features of this package.  See the [README](example/README.md).
 

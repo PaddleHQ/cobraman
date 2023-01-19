@@ -33,7 +33,7 @@ func TestCustomerTemplate(t *testing.T) {
 
 	RegisterTemplate("good", "-", "txt", "Hello {{ \"world\" }} ")
 	cmd := &cobra.Command{Use: "foo"}
-	opts := CobraManOptions{}
+	opts := Options{}
 	assert.NoError(t, GenerateOnePage(cmd, &opts, "good", buf))
 	assert.Regexp(t, "Hello world", buf.String())
 
@@ -56,9 +56,9 @@ func TestAddTemplateFunc(t *testing.T) {
 	// Register template using these new functions
 	RegisterTemplate("tester", "-", "txt", `{{ hello "World" | lower }} {{ repeat "x" 5 }}`)
 	cmd := &cobra.Command{Use: "foo"}
-	opts := CobraManOptions{}
+	opts := Options{}
 	buf := new(bytes.Buffer)
 	assert.NoError(t, GenerateOnePage(cmd, &opts, "tester", buf))
-	assert.Regexp(t, "hello world!", buf.String()) 
+	assert.Regexp(t, "hello world!", buf.String())
 	assert.Regexp(t, "xxxxx", buf.String())
 }

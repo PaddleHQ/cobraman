@@ -31,7 +31,7 @@ import (
 
 var cfgFile string
 
-// rootCmd represents the base command when called without any subcommands
+// rootCmd represents the base command when called without any subcommands.
 var rootCmd = &cobra.Command{
 	Use:   "example",
 	Short: "A brief description of your application",
@@ -55,12 +55,12 @@ func Execute() {
 	}
 }
 
-// GetRootCmd was added so docutil can get access to root cmd for print docs
+// GetRootCmd was added so docutil can get access to root cmd for print docs.
 func GetRootCmd() *cobra.Command {
 	return rootCmd
 }
 
-func init() { 
+func init() {
 	cobra.OnInitialize(initConfig)
 
 	// Here you will define your flags and configuration settings.
