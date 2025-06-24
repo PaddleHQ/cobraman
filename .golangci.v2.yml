@@ -1,11 +1,47 @@
+## This file should only be updated in the coding-standards (https://github.com/PaddleHQ/coding-standards/) repo.
+## Changes will automatically generate a PR into all the go services and libraries
+
 version: "2"
+
 run:
-  tests: false
+  tests: true
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+formatters:
+  enable:
+    - gci
+    - gofmt
+    - gofumpt
+  settings:
+    gci:
+      sections:
+        - standard
+        - localmodule
+        - prefix(github.com/PaddleHQ)
+        - default
+      custom-order: true
+    gofmt:
+      simplify: true
+      rewrite-rules:
+        - pattern: interface{}
+          replacement: any
+        - pattern: a[b:len(a)]
+          replacement: a[b:]
+  exclusions:
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+
 linters:
   default: none
   enable:
     - bodyclose
     - containedctx
+    - copyloopvar
     - cyclop
     - dogsled
     - durationcheck
@@ -13,6 +49,7 @@ linters:
     - errcheck
     - errname
     - exhaustive
+    - forbidigo
     - forcetypeassert
     - funlen
     - gocognit
@@ -25,6 +62,7 @@ linters:
     - ineffassign
     - lll
     - makezero
+    - misspell
     - nestif
     - nilerr
     - noctx
@@ -32,14 +70,19 @@ linters:
     - predeclared
     - revive
     - rowserrcheck
+    - sloglint
+    - spancheck
     - sqlclosecheck
     - staticcheck
+    - testifylint
     - testpackage
     - unconvert
     - unparam
     - unused
+    - usetesting
     - wastedassign
     - whitespace
+
   settings:
     exhaustive:
       default-signifies-exhaustive: true
@@ -52,21 +95,56 @@ linters:
         - opinionated
         - performance
         - style
+    godot:
+      exclude:
+        # go-relish uses comments to auto-generate code, these lines should not end with a `.`
+        - '@(Given|When|Then|And|But) (.*)'
+    gosec:
+      excludes:
+        - G115
     lll:
       line-length: 140
     misspell:
       locale: US
+      ignore-rules:
+        - localised
+        - catalogue
+        - authorised
+    sloglint:
+      context: all
+      static-msg: true
+      key-naming-case: kebab
+    staticcheck:
+      checks:
+        - all
+        - -QF1008
+    spancheck:
+      checks:
+        - end
+        - record-error
+        - set-status
+    testifylint:
+      disable:
+        - require-error
   exclusions:
-    generated: lax
-    paths:
-      - third_party$
-      - builtin$
-      - examples$
-formatters:
-  enable:
-    - gofumpt
-  exclusions:
-    generated: lax
+    rules:
+      - linters:
+          - bodyclose
+          - containedctx
+          - copyloopvar
+          - cyclop
+          - dogsled
+          - err113
+          - exhaustive
+          - forcetypeassert
+          - funlen
+          - gocognit
+          - goconst
+          - gocyclo
+          - gosec
+          - lll
+          - nestif
+        path: _test\.go
     paths:
       - third_party$
       - builtin$
