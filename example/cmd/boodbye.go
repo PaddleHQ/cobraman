@@ -22,7 +22,7 @@
 package cmd
 
 import (
-	"fmt"
+	"log/slog"
 
 	"github.com/spf13/cobra"
 )
@@ -37,8 +37,8 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Run: func(_ *cobra.Command, _ []string) {
-		fmt.Println("boodbye called")
+	Run: func(cmd *cobra.Command, _ []string) {
+		slog.InfoContext(cmd.Context(), "boodbye called")
 	},
 }
 

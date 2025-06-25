@@ -40,7 +40,7 @@ var templateFuncs = template.FuncMap{
 }
 
 // AddTemplateFunc adds a template function that's available to doc templates.
-func AddTemplateFunc(name string, tmplFunc interface{}) {
+func AddTemplateFunc(name string, tmplFunc any) {
 	templateFuncs[name] = tmplFunc
 }
 

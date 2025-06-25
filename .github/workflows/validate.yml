@@ -169,4 +169,3 @@ jobs:
         uses: ./.github/workflows/trigger-automerge
         with:
           event: ${{ toJSON(github.event) }}
-

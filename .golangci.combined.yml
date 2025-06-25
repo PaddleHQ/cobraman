@@ -1,6 +1,8 @@
 ## This file should only be updated in the coding-standards (https://github.com/PaddleHQ/coding-standards/) repo.
 ## Changes will automatically generate a PR into all the go services and libraries
 
+## This file should only be updated in the coding-standards (https://github.com/PaddleHQ/coding-standards/) repo.
+## Changes will automatically generate a PR into all the go services and libraries
 run:
   tests: true
 issues:
@@ -26,7 +28,10 @@ issues:
         - gosec
         - lll
         - nestif
-
+    - path: _test\.go
+      linters:
+        - nilnil
+        - wrapcheck
 # Override the defaults for each linter specified.
 linters-settings:
   gocritic:
@@ -84,7 +89,9 @@ linters-settings:
         replacement: 'any'
       - pattern: 'a[b:len(a)]'
         replacement: 'a[b:]'
-
+  wrapcheck:
+    ignorePackageGlobs:
+      - github.com/PaddleHQ/*
 linters:
   enable:
     # Checks for unclosed HTTP response body: https://github.com/timakin/bodyclose
@@ -185,3 +192,7 @@ linters:
     - wastedassign
     # Checks for detection of leading and trailing whitespace: https://github.com/ultraware/whitespace
     - whitespace
+    # Checks for no simultaneous return of nil error and an invalid value: https://github.com/Antonboom/nilnil
+    - nilnil
+    # Checks that errors returned from external packages are wrapped: https://github.com/tomarrell/wrapcheck
+    - wrapcheck

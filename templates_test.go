@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package cobraman
+package cobraman_test
 
 import (
 	"bytes"
@@ -19,24 +19,25 @@ import (
 	"testing"
 	"text/template"
 
+	"github.com/PaddleHQ/cobraman"
+
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestRegisterTemplate(t *testing.T) {
-	assert.Panics(t, func() { RegisterTemplate("bad", "-", "txt", "what {{ ") }, "The code did not panic")
-	assert.NotPanics(t, func() { RegisterTemplate("good", "-", "txt", "Hello {{ \"world\" }} ") }, "The code should not panic")
+	assert.Panics(t, func() { cobraman.RegisterTemplate("bad", "-", "txt", "what {{ ") }, "The code did not panic")
+	assert.NotPanics(t, func() { cobraman.RegisterTemplate("good", "-", "txt", "Hello {{ \"world\" }} ") }, "The code should not panic")
 }
 
 func TestCustomerTemplate(t *testing.T) {
 	buf := new(bytes.Buffer)
 
-	RegisterTemplate("good", "-", "txt", "Hello {{ \"world\" }} ")
+	cobraman.RegisterTemplate("good", "-", "txt", "Hello {{ \"world\" }} ")
 	cmd := &cobra.Command{Use: "foo"}
-	opts := Options{}
-	assert.NoError(t, GenerateOnePage(cmd, &opts, "good", buf))
+	opts := cobraman.Options{}
+	assert.NoError(t, cobraman.GenerateOnePage(cmd, &opts, "good", buf))
 	assert.Regexp(t, "Hello world", buf.String())
-
 }
 
 func hello(str string) string {
@@ -44,21 +45,21 @@ func hello(str string) string {
 }
 
 func TestAddTemplateFunc(t *testing.T) {
-	AddTemplateFunc("lower", strings.ToLower)
+	cobraman.AddTemplateFunc("lower", strings.ToLower)
 
-	var templateFuncs = template.FuncMap{
+	templateFuncs := template.FuncMap{
 		"hello":  hello,
 		"repeat": strings.Repeat,
 	}
 
-	AddTemplateFuncs(templateFuncs)
+	cobraman.AddTemplateFuncs(templateFuncs)
 
 	// Register template using these new functions
-	RegisterTemplate("tester", "-", "txt", `{{ hello "World" | lower }} {{ repeat "x" 5 }}`)
+	cobraman.RegisterTemplate("tester", "-", "txt", `{{ hello "World" | lower }} {{ repeat "x" 5 }}`)
 	cmd := &cobra.Command{Use: "foo"}
-	opts := Options{}
+	opts := cobraman.Options{}
 	buf := new(bytes.Buffer)
-	assert.NoError(t, GenerateOnePage(cmd, &opts, "tester", buf))
+	assert.NoError(t, cobraman.GenerateOnePage(cmd, &opts, "tester", buf))
 	assert.Regexp(t, "hello world!", buf.String())
 	assert.Regexp(t, "xxxxx", buf.String())
 }

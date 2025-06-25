@@ -1,15 +1,14 @@
 ## This file should only be updated in the coding-standards (https://github.com/PaddleHQ/coding-standards/) repo.
 ## Changes will automatically generate a PR into all the go services and libraries
 
+## This file should only be updated in the coding-standards (https://github.com/PaddleHQ/coding-standards/) repo.
+## Changes will automatically generate a PR into all the go services and libraries
 version: "2"
-
 run:
   tests: true
-
 issues:
   max-issues-per-linter: 0
   max-same-issues: 0
-
 formatters:
   enable:
     - gci
@@ -35,7 +34,9 @@ formatters:
       - third_party$
       - builtin$
       - examples$
-
+      - third_party$
+      - builtin$
+      - examples$
 linters:
   default: none
   enable:
@@ -82,7 +83,8 @@ linters:
     - usetesting
     - wastedassign
     - whitespace
-
+    - nilnil
+    - wrapcheck
   settings:
     exhaustive:
       default-signifies-exhaustive: true
@@ -126,6 +128,9 @@ linters:
     testifylint:
       disable:
         - require-error
+    wrapcheck:
+      ignore-package-globs:
+        - github.com/PaddleHQ/*
   exclusions:
     rules:
       - linters:
@@ -145,7 +150,14 @@ linters:
           - lll
           - nestif
         path: _test\.go
+      - linters:
+          - nilnil
+          - wrapcheck
+        path: _test\.go
     paths:
+      - third_party$
+      - builtin$
+      - examples$
       - third_party$
       - builtin$
       - examples$
