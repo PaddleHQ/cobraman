@@ -1,0 +1,41 @@
+# DO NOT EDIT: This file should only be modified in the `go-library-template` repo.
+
+name: Ensure code can build
+
+on:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: write # required for `workflow-dispatch` to trigger the automerge workflow
+
+jobs:
+  check_build:
+    name: Run code validation checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          persist-credentials: false
+
+      - name: Set up Go
+        uses: ./.github/workflows/setup-go
+        id: setup-go
+        with:
+          owner: ${{ github.repository_owner }}
+          private: ${{ github.event.repository.private }}
+          private-key: ${{ secrets.PRIVATE_GO_CI_PRIVATE_KEY }}
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Automerge
+        uses: ./.github/workflows/trigger-automerge
+        with:
+          event: ${{ toJSON(github.event) }}

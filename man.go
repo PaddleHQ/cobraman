@@ -308,7 +308,7 @@ func genFlagArray(flags *pflag.FlagSet) []manFlag {
 	flagArray := make([]manFlag, 0, 15)
 	flags.VisitAll(
 		func(flag *pflag.Flag) {
-			if len(flag.Deprecated) > 0 || flag.Hidden {
+			if flag.Deprecated != "" || flag.Hidden {
 				return
 			}
 			thisFlag := manFlag{

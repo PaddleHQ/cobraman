@@ -1,0 +1,73 @@
+version: "2"
+run:
+  tests: false
+linters:
+  default: none
+  enable:
+    - bodyclose
+    - containedctx
+    - cyclop
+    - dogsled
+    - durationcheck
+    - err113
+    - errcheck
+    - errname
+    - exhaustive
+    - forcetypeassert
+    - funlen
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - gosec
+    - govet
+    - ineffassign
+    - lll
+    - makezero
+    - nestif
+    - nilerr
+    - noctx
+    - prealloc
+    - predeclared
+    - revive
+    - rowserrcheck
+    - sqlclosecheck
+    - staticcheck
+    - testpackage
+    - unconvert
+    - unparam
+    - unused
+    - wastedassign
+    - whitespace
+  settings:
+    exhaustive:
+      default-signifies-exhaustive: true
+    gocritic:
+      disabled-checks:
+        - hugeParam
+        - paramTypeCombine
+      enabled-tags:
+        - diagnostic
+        - opinionated
+        - performance
+        - style
+    lll:
+      line-length: 140
+    misspell:
+      locale: US
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gofumpt
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
