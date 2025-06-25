@@ -41,7 +41,7 @@ func TestAddDocGenerator(t *testing.T) {
 	args := []string{"generate-bar"}
 	dg.docCmd.SetArgs(args)
 	buf := new(bytes.Buffer)
-	dg.docCmd.SetOutput(buf)
+	dg.docCmd.SetOut(buf)
 
 	// No error is thrown instead usage string is shown
 	assert.NoError(t, dg.Execute())
