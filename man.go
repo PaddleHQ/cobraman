@@ -87,7 +87,7 @@ type Options struct {
 	fileSuffix string
 
 	// CustomData allows passing custom data into the template
-	CustomData map[string]interface{}
+	CustomData map[string]any
 }
 
 // GenerateDocs - build man pages for the passed in cobra.Command
@@ -172,7 +172,7 @@ type manStruct struct {
 
 	CobraCmd *cobra.Command
 
-	CustomData map[string]interface{}
+	CustomData map[string]any
 }
 
 type manFlag struct {

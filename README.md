@@ -93,5 +93,3 @@ Cobra Man uses Go templates to generate the documentation.  You can replace the 
 But, of course, you can provide your own template if you like for maximum power!
 
 See [Writing your own template](WRITING_A_TEMPLATE.md) for more information.
-
-

@@ -53,7 +53,7 @@ func TestAddDocGenerator(t *testing.T) {
 	assert.Error(t, dg.Execute()) // Will generate an error because our command is dumb
 }
 
-func TestAddBashCompletionGenerator(t *testing.T) {
+func TestAddBashCompletionGenerator(_ *testing.T) {
 	appCmd := &cobra.Command{}
 	dg := CreateDocGenCmdLineTool(appCmd)
 	dg.AddBashCompletionGenerator("foo.txt")
@@ -61,8 +61,8 @@ func TestAddBashCompletionGenerator(t *testing.T) {
 
 func TestExecute(t *testing.T) {
 	appCmd := &cobra.Command{Use: "foo"}
-	cmd2 := &cobra.Command{Use: "child1", Run: func(cmd *cobra.Command, args []string) {}}
-	cmd3 := &cobra.Command{Use: "child2", Run: func(cmd *cobra.Command, args []string) {}}
+	cmd2 := &cobra.Command{Use: "child1", Run: func(_ *cobra.Command, _ []string) {}}
+	cmd3 := &cobra.Command{Use: "child2", Run: func(_ *cobra.Command, _ []string) {}}
 	appCmd.AddCommand(cmd2, cmd3)
 
 	dg := CreateDocGenCmdLineTool(appCmd)

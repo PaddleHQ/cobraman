@@ -21,11 +21,13 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func checkForFile(t *testing.T, path string) {
 	if _, err := os.Stat(path); err == nil {
-		os.Remove(path)
+		err := os.Remove(path)
+		require.NoError(t, err)
 		return
 	}
 	assert.Fail(t, "Expected file does not exist: "+path)
@@ -47,48 +49,47 @@ func TestGenerateManPages(t *testing.T) {
 	assert.Equal(t, "you need a command name to have a man page", err.Error())
 
 	cmd = &cobra.Command{Use: "foo"}
-	assert.Nil(t, GenerateDocs(cmd, &opts, "", "troff"))
+	assert.NoError(t, GenerateDocs(cmd, &opts, "", "troff"))
 	checkForFile(t, "foo.1")
 
 	opts = Options{Section: "8"}
-	assert.Nil(t, GenerateDocs(cmd, &opts, "", "troff"))
+	assert.NoError(t, GenerateDocs(cmd, &opts, "", "troff"))
 	checkForFile(t, "foo.8")
 
 	cmd = &cobra.Command{Use: "foo"}
-	cmd2 := &cobra.Command{Use: "bar", Run: func(cmd *cobra.Command, args []string) {}}
+	cmd2 := &cobra.Command{Use: "bar", Run: func(_ *cobra.Command, _ []string) {}}
 	cmd.AddCommand(cmd2)
 	opts = Options{}
-	assert.Nil(t, GenerateDocs(cmd, &opts, "", "troff"))
+	assert.NoError(t, GenerateDocs(cmd, &opts, "", "troff"))
 	checkForFile(t, "foo.1")
 	checkForFile(t, "foo-bar.1")
 
 	cmd = &cobra.Command{Use: "foo"}
-	cmd2 = &cobra.Command{Use: "bar", Run: func(cmd *cobra.Command, args []string) {}}
+	cmd2 = &cobra.Command{Use: "bar", Run: func(_ *cobra.Command, _ []string) {}}
 	cmd.AddCommand(cmd2)
-	assert.Nil(t, GenerateDocs(cmd, &opts, "", "markdown"))
+	assert.NoError(t, GenerateDocs(cmd, &opts, "", "markdown"))
 	checkForFile(t, "foo.md")
 	checkForFile(t, "foo_bar.md")
-
 }
 
 func TestSetCobraManOptDefaults(t *testing.T) {
 	opts := Options{}
 
 	validate(&opts, "troff")
-	assert.Equal(t, opts.Section, "1")
-	assert.Equal(t, opts.fileCmdSeparator, "-")
-	assert.Equal(t, opts.fileSuffix, "1")
+	assert.Equal(t, "1", opts.Section)
+	assert.Equal(t, "-", opts.fileCmdSeparator)
+	assert.Equal(t, "1", opts.fileSuffix)
 
-	delta := time.Now().Sub(*opts.Date)
+	delta := time.Since(*opts.Date)
 	if delta.Seconds() >= 1 {
 		assert.Fail(t, "time difference too large")
 	}
 
 	opts = Options{}
 	validate(&opts, "markdown")
-	assert.Equal(t, opts.Section, "1")
-	assert.Equal(t, opts.fileCmdSeparator, "_")
-	assert.Equal(t, opts.fileSuffix, "md")
+	assert.Equal(t, "1", opts.Section)
+	assert.Equal(t, "_", opts.fileCmdSeparator)
+	assert.Equal(t, "md", opts.fileSuffix)
 
 	opts = Options{}
 	assert.Panics(t, func() { validate(&opts, "no exist") }, "should have paniced")
@@ -131,8 +132,8 @@ func TestGenerateManPageRequired(t *testing.T) {
 
 	buf.Reset()
 	cmd = &cobra.Command{Use: "foo"}
-	cmd2 := &cobra.Command{Use: "cat", Run: func(cmd *cobra.Command, args []string) {}}
-	cmd3 := &cobra.Command{Use: "dog", Run: func(cmd *cobra.Command, args []string) {}}
+	cmd2 := &cobra.Command{Use: "cat", Run: func(_ *cobra.Command, _ []string) {}}
+	cmd3 := &cobra.Command{Use: "dog", Run: func(_ *cobra.Command, _ []string) {}}
 	cmd.AddCommand(cmd2, cmd3)
 	assert.NoError(t, GenerateOnePage(cmd, &opts, "troff", buf))
 	assert.Regexp(t, ".SH SYNOPSIS\n.sp\n.+foo cat.+flags.+\n.br\n.+foo dog", buf.String())
@@ -155,16 +156,14 @@ This is long & stuff.`
 	buf.Reset()
 	assert.NoError(t, GenerateOnePage(cmd, &opts, "troff", buf))
 	assert.Regexp(t, ".SH DESCRIPTION\n.PP\nLong desc\n.PP\nThis is long \\\\& stuff.", buf.String())
-
 }
 
 func TestCobraManOptions(t *testing.T) {
 	buf := new(bytes.Buffer)
 
-	cmd := &cobra.Command{Use: "foo"}
 	opts := Options{}
 
-	cmd = &cobra.Command{Use: "foo"}
+	cmd := &cobra.Command{Use: "foo"}
 	assert.NoError(t, GenerateOnePage(cmd, &opts, "troff", buf))
 	assert.NotRegexp(t, ".SH OPTIONS\n", buf.String()) // No OPTIONS section if no flags
 
@@ -265,24 +264,27 @@ func TestGenerateManPageAltSections(t *testing.T) {
 
 func TestBiggerExample(t *testing.T) {
 	cmd := &cobra.Command{Use: "bob"}
-	cmd2 := &cobra.Command{Use: "bar", Run: func(cmd *cobra.Command, args []string) {}}
-	cmd3 := &cobra.Command{Use: "foo", Run: func(cmd *cobra.Command, args []string) {}}
-	cmdH := &cobra.Command{Use: "hidden", Run: func(cmd *cobra.Command, args []string) {}}
+	cmd2 := &cobra.Command{Use: "bar", Run: func(_ *cobra.Command, _ []string) {}}
+	cmd3 := &cobra.Command{Use: "foo", Run: func(_ *cobra.Command, _ []string) {}}
+	cmdH := &cobra.Command{Use: "hidden", Run: func(_ *cobra.Command, _ []string) {}}
 	cmdH.Hidden = true
-	cmd4 := &cobra.Command{Use: "ash", Run: func(cmd *cobra.Command, args []string) {}}
+	cmd4 := &cobra.Command{Use: "ash", Run: func(_ *cobra.Command, _ []string) {}}
 	cmd.AddCommand(cmd2, cmd3, cmd4, cmdH)
-	cmd5 := &cobra.Command{Use: "dog", Run: func(cmd *cobra.Command, args []string) {}}
-	cmd6 := &cobra.Command{Use: "cat", Run: func(cmd *cobra.Command, args []string) {}}
+	cmd5 := &cobra.Command{Use: "dog", Run: func(_ *cobra.Command, _ []string) {}}
+	cmd6 := &cobra.Command{Use: "cat", Run: func(_ *cobra.Command, _ []string) {}}
 	cmd6.Flags().Bool("boolflag", false, "Blah")
 	cmd6.Flags().Bool("hiddenflag", false, "Blah")
 	cmd6.Flags().Lookup("hiddenflag").Hidden = true
 	cmd6.Flags().String("file", "", "Blah")
 	annotation := []string{"path"}
-	cmd6.Flags().SetAnnotation("file", "man-arg-hints", annotation)
+
+	err := cmd6.Flags().SetAnnotation("file", "man-arg-hints", annotation)
+	require.NoError(t, err)
+
 	cmd3.AddCommand(cmd5, cmd6)
 
 	opts := Options{}
-	assert.Nil(t, GenerateDocs(cmd, &opts, "", "troff"))
+	assert.NoError(t, GenerateDocs(cmd, &opts, "", "troff"))
 	// TODO test hidden flag does not exist in bob-foo-cat.1
 	// TODO: test annotation exists
 	checkForFile(t, "bob.1")
@@ -292,5 +294,4 @@ func TestBiggerExample(t *testing.T) {
 	checkForFile(t, "bob-foo-dog.1")
 	checkForFile(t, "bob-foo.1")
 	checkFileNotExist(t, "bob-hidden.1")
-
 }

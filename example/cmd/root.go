@@ -50,8 +50,7 @@ to quickly create a Cobra application.`,
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		panic(err)
 	}
 }
 
@@ -74,6 +73,7 @@ func init() {
 }
 
 // initConfig reads in config file and ENV variables if set.
+// nolint:forbidigo // this is a CLI tool
 func initConfig() {
 	if cfgFile != "" {
 		// Use config file from the flag.
