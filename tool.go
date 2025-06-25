@@ -51,7 +51,7 @@ func (dg *DocGenTool) AddBashCompletionGenerator(fileName string) *DocGenTool {
 		Use:   "generate-auto-complete",
 		Args:  cobra.NoArgs,
 		Short: "Generate bash auto complete script",
-		RunE: func(myCmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			path := filepath.Join(dg.installDirectory, fileName)
 			return dg.appCmd.GenBashCompletionFile(path)
 		},
@@ -78,7 +78,7 @@ func (dg *DocGenTool) AddDocGenerator(opts *Options, templateName string) *DocGe
 		Use:   "generate-" + templateName,
 		Args:  cobra.NoArgs,
 		Short: "Generate docs with the " + templateName + " template",
-		RunE: func(myCmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			return GenerateDocs(dg.appCmd, opts, dg.installDirectory, templateName)
 		},
 	}
