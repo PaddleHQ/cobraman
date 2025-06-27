@@ -29,7 +29,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up Go
-        uses: ./.github/workflows/setup-go
+        uses: ./.github/actions/setup-go
         with:
           owner: ${{ github.repository_owner }}
           private: ${{ github.event.repository.private }}
@@ -105,6 +105,6 @@ jobs:
               ```
 
       - name: Automerge
-        uses: ./.github/workflows/trigger-automerge
+        uses: ./.github/actions/trigger-automerge
         with:
           event: ${{ toJSON(github.event) }}

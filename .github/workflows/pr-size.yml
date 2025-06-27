@@ -85,6 +85,7 @@ jobs:
             > issues with one PR. Note this PR might be rejected due to its size.
 
       - name: Automerge
-        uses: ./.github/workflows/trigger-automerge
+        uses: ./.github/actions/trigger-automerge
         with:
           event: ${{ toJSON(github.event) }}
+
