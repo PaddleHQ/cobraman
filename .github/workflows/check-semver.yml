@@ -57,6 +57,6 @@ jobs:
           persist-credentials: false
 
       - name: Automerge
-        uses: ./.github/workflows/trigger-automerge
+        uses: ./.github/actions/trigger-automerge
         with:
           event: ${{ toJSON(github.event) }}

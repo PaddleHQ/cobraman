@@ -25,7 +25,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up Go
-        uses: ./.github/workflows/setup-go
+        uses: ./.github/actions/setup-go
         id: setup-go
         with:
           owner: ${{ github.repository_owner }}
@@ -36,6 +36,6 @@ jobs:
         run: go build -v ./...
 
       - name: Automerge
-        uses: ./.github/workflows/trigger-automerge
+        uses: ./.github/actions/trigger-automerge
         with:
           event: ${{ toJSON(github.event) }}

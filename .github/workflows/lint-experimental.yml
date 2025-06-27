@@ -37,7 +37,7 @@ jobs:
 
       - name: Set up Go
         if: ${{ steps.should_run.outputs.should_run == 'true' }}
-        uses: ./.github/workflows/setup-go
+        uses: ./.github/actions/setup-go
         with:
           owner: ${{ github.repository_owner }}
           private: ${{ github.event.repository.private }}
@@ -76,6 +76,6 @@ jobs:
             > for more details.
 
       - name: Automerge
-        uses: ./.github/workflows/trigger-automerge
+        uses: ./.github/actions/trigger-automerge
         with:
           event: ${{ toJSON(github.event) }}
