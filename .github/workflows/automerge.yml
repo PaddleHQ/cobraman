@@ -172,7 +172,7 @@ jobs:
           echo "🔍 Checking which files were modified by from a library template sync..."
 
           # Check if only safe files were modified (workflows and dependabot config)
-          if git diff --quiet origin/${{ github.event.repository.default_branch }} -- ':!.github/workflows' ':!.github/dependabot.yml'; then
+          if git diff --quiet origin/${{ github.event.repository.default_branch }} -- ':!.github/actions' ':!.github/workflows' ':!.github/dependabot.yml'; then
             echo "✅ Only safe template files modified (workflows/dependabot) - automerge enabled"
             echo "can_automerge=true" >> $GITHUB_OUTPUT
           else
