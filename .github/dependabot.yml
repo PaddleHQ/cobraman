@@ -18,4 +18,16 @@ updates:
       otel:
         patterns:
           - "go.opentelemetry.io/otel/*"
+  - package-ecosystem: "gomod"
+    directory: /
+    schedule:
+      interval: "daily"
+      time: "03:00"
+    open-pull-requests-limit: 1
+    labels:
+      - "release:patch"
+      - "do-not-merge"
+    groups:
+      otelcontrib:
+        patterns:
           - "go.opentelemetry.io/contrib/*"
