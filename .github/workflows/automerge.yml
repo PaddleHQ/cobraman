@@ -58,6 +58,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           PR=`gh pr view ${{ github.event.inputs.pr_number }} --json isDraft,author,labels,headRefName,baseRefName`
+
           echo "draft=`echo ${PR} | jq -r '.isDraft'`" >> $GITHUB_OUTPUT
           echo "user_login=`echo ${PR} | jq -r '.author.login'`" >> $GITHUB_OUTPUT
           echo "labels=`echo ${PR} | jq -r '.labels | map(.name) | join(",")'`" >> $GITHUB_OUTPUT
@@ -99,8 +100,8 @@ jobs:
 
     if: |-
       needs.pr_info.outputs.draft == 'false' && (
-        needs.pr_info.outputs.user_login == 'dependabot[bot]' ||
-        needs.pr_info.outputs.user_login == 'paddle-repo-file-sync[bot]'
+        needs.pr_info.outputs.user_login == 'app/dependabot' ||
+        needs.pr_info.outputs.user_login == 'app/paddle-repo-file-sync'
       )
 
     steps:
@@ -169,7 +170,7 @@ jobs:
 
     if: |-
       needs.wait_for_ready.outputs.can_automerge == 'true' &&
-      needs.pr_info.outputs.user_login == 'dependabot[bot]'
+      needs.pr_info.outputs.user_login == 'app/dependabot'
 
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -210,7 +211,7 @@ jobs:
 
     if: |-
       needs.wait_for_ready.outputs.can_automerge == 'true' &&
-      needs.pr_info.outputs.user_login == 'paddle-repo-file-sync[bot]' &&
+      needs.pr_info.outputs.user_login == 'app/paddle-repo-file-sync' &&
       (
         contains(needs.pr_info.outputs.labels, 'origin:go-library-template') ||
         contains(needs.pr_info.outputs.labels, 'origin:php-library-template')
@@ -253,7 +254,7 @@ jobs:
 
     if: |-
       needs.wait_for_ready.outputs.can_automerge == 'true' &&
-      needs.pr_info.outputs.user_login == 'paddle-repo-file-sync[bot]' &&
+      needs.pr_info.outputs.user_login == 'app/paddle-repo-file-sync' &&
       contains(needs.pr_info.outputs.labels, 'origin:paddle-config')
 
     steps:
@@ -336,11 +337,11 @@ jobs:
           private-key: ${{ secrets.AUTO_APPROVER_PRIVATE_KEY }}
 
       - name: "✅ Auto Approve PR"
-        run: gh pr review --approve "${{ steps.generate-token.outputs.token }}"
+        run: gh pr review --approve "${{ github.event.inputs.pr_number }}"
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
 
       - name: "🔀 Auto Merge PR"
-        run: gh pr merge --admin --squash "${{ steps.generate-token.outputs.token }}"
+        run: gh pr merge --admin --squash "${{ github.event.inputs.pr_number }}"
         env:
           GH_TOKEN: ${{ steps.generate-token.outputs.token }}
