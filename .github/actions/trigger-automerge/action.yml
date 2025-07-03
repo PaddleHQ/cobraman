@@ -18,11 +18,6 @@ runs:
         workflow: automerge.yml
         ref: ${{ github.head_ref || github.ref_name }}
         inputs: '{
-            "workflow": "${{ github.workflow }}",
-            "draft_pr": "${{ fromJSON(inputs.event).pull_request.draft }}",
-            "user_login": "${{ fromJSON(inputs.event).pull_request.user.login }}",
-            "labels": "${{ join(fromJSON(inputs.event).pull_request.labels.*.name) }}",
-            "sha": "${{ fromJSON(inputs.event).pull_request.head.sha }}",
-            "base_ref": "${{ fromJSON(inputs.event).pull_request.base.ref }}",
-            "html_url": "${{ fromJSON(inputs.event).pull_request.html_url }}"
+            "pr_number": "${{ fromJSON(inputs.event).pull_request.number }}",
+            "workflow": "${{ github.workflow }}"
           }'
