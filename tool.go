@@ -14,6 +14,7 @@
 package cobraman
 
 import (
+	"fmt"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
@@ -90,5 +91,9 @@ func (dg *DocGenTool) AddDocGenerator(opts *Options, templateName string) *DocGe
 
 // Execute will parse args and execute the command line.
 func (dg *DocGenTool) Execute() error {
-	return dg.docCmd.Execute()
+	if err := dg.docCmd.Execute(); err != nil {
+		return fmt.Errorf("[cobraman] error executing command: %w", err)
+	}
+
+	return nil
 }

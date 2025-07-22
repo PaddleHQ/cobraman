@@ -17,6 +17,7 @@ package cobraman
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -116,7 +117,7 @@ func GenerateDocs(cmd *cobra.Command, opts *Options, directory string, templateN
 	filename := filepath.Join(directory, basename+"."+opts.fileSuffix)
 	f, err := os.Create(filename) //nolint:gosec // the file is constructed safely
 	if err != nil {
-		return err
+		return fmt.Errorf("[cobraman] could not create file %s: %w", filename, err)
 	}
 	defer func() {
 		err = f.Close()
@@ -299,7 +300,7 @@ func GenerateOnePage(cmd *cobra.Command, opts *Options, templateName string, w i
 
 	err := t.Execute(w, values)
 	if err != nil {
-		return err
+		return fmt.Errorf("[cobraman] could not execute template: %w", err)
 	}
 	return nil
 }
