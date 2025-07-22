@@ -190,8 +190,8 @@ jobs:
         run: |
           echo "🔍 Checking dependency changes in go.mod..."
           if git diff --quiet ${{ needs.pr_info.outputs.merge_base }} -- 'go.mod'; then
-            echo "ℹ️ No changes in go.mod - automerge enabled"
-            echo "can_automerge=true" >> $GITHUB_OUTPUT
+            echo "ℹ️ No changes in go.mod - automerge not enabled. Requires manual review"
+            echo "can_automerge=false" >> $GITHUB_OUTPUT
           elif git diff --quiet -G "github.com/PaddleHQ/" ${{ needs.pr_info.outputs.merge_base }} -- go.mod; then
             echo "⚠️ No PaddleHQ dependencies updated - automerge not enabled. Requires manual review"
           else
