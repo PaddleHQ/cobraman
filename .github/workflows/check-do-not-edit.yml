@@ -17,6 +17,11 @@ jobs:
     name: Check for DO NOT EDIT files
 
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
       - name: Skip if the PR was created by paddle-repo-file-sync[bot]
         if: github.actor == 'paddle-repo-file-sync[bot]'
         run: |
