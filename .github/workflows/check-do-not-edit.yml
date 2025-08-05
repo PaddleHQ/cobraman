@@ -48,7 +48,7 @@ jobs:
           mergeBase=`git merge-base origin/${{ github.event.pull_request.base.ref }} HEAD`
 
           echo "Merge base: $mergeBase"
-          changed_files=$(git diff --name-only $mergeBase)
+          changed_files=$(git diff --name-only --merge-base $mergeBase)
 
           if [[ -z "$changed_files" ]]; then
             echo "No changed files found."
