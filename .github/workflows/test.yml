@@ -52,7 +52,7 @@ jobs:
             -shuffle=on
 
       - name: Remove mocks from coverage
-        run: grep -v "/mocks" cover.out > cover.filtered.out
+        run: grep -v -e ".\.pb\.go" -e "/mocks" cover.out > cover.filtered.out
 
       - name: Get total coverage
         run: |
