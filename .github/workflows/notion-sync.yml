@@ -32,6 +32,9 @@ jobs:
           persist-credentials: false
 
       - name: Push Markdown to Notion
+        env:
+          NOTION_ACCESS_TOKEN: ${{ secrets.NOTION_ACCESS_TOKEN }}
+        if: env.NOTION_ACCESS_TOKEN != null
         uses: step-security/push-md-to-notion@f16ef63f6a9b9c23ecd570cfe8dadfb0be0b34fd # v1.0.0
         with:
           notion-token: ${{ secrets.NOTION_ACCESS_TOKEN }}
