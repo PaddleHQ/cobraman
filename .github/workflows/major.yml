@@ -77,3 +77,4 @@ jobs:
         uses: ./.github/actions/trigger-automerge
         with:
           event: ${{ toJSON(github.event) }}
+          hasAutoApproverPrivateKey: ${{ secrets.AUTO_APPROVER_PRIVATE_KEY != '' }}
