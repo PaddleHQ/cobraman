@@ -16,7 +16,7 @@ runs:
   using: "composite"
   steps:
     - name: Attempt to automerge
-      if: fromJSON(inputs.hasAutoApproverPrivateKey) == true &&
+      if: inputs.hasAutoApproverPrivateKey == 'true' &&
           fromJSON(inputs.event).pull_request.merged == false &&
           fromJSON(inputs.event).pull_request.draft == false &&
           fromJSON(inputs.event).pull_request.state == 'open'
