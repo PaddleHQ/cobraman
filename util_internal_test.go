@@ -30,7 +30,7 @@ func TestBackslashify(t *testing.T) {
 		{`-_&\~`, `\-\_\&\\\~`},
 	}
 
-	for i := 0; i < len(cases); i++ {
+	for i := range cases {
 		str := backslashify(cases[i][0])
 		expected := cases[i][1]
 		assert.Equal(t, expected, str)
@@ -44,7 +44,7 @@ func TestDashify(t *testing.T) {
 		{` foo bar `, `-foo-bar-`},
 	}
 
-	for i := 0; i < len(cases); i++ {
+	for i := range cases {
 		str := dashify(cases[i][0])
 		expected := cases[i][1]
 		assert.Equal(t, expected, str)
@@ -58,7 +58,7 @@ func TestUnderscoreify(t *testing.T) {
 		{` foo bar `, `_foo_bar_`},
 	}
 
-	for i := 0; i < len(cases); i++ {
+	for i := range cases {
 		str := underscoreify(cases[i][0])
 		expected := cases[i][1]
 		assert.Equal(t, expected, str)
@@ -74,7 +74,7 @@ func TestSimpleToTroff(t *testing.T) {
 		{"Some test\n\n\n\nwith empty line", "Some test\n.PP\nwith empty line"},
 	}
 
-	for i := 0; i < len(cases); i++ {
+	for i := range cases {
 		str := simpleToTroff(cases[i][0])
 		expected := cases[i][1]
 		assert.Equal(t, expected, str)
@@ -90,7 +90,7 @@ func TestSimpleToMdoc(t *testing.T) {
 		{"Some test\n\n\n\nwith empty line", "Some test\n.Pp\nwith empty line"},
 	}
 
-	for i := 0; i < len(cases); i++ {
+	for i := range cases {
 		str := simpleToMdoc(cases[i][0])
 		expected := cases[i][1]
 		assert.Equal(t, expected, str)
@@ -104,7 +104,7 @@ func TestRpad(t *testing.T) {
 		{"foo bar cat", "10", "foo bar catx"},
 	}
 
-	for i := 0; i < len(cases); i++ {
+	for i := range cases {
 		pad, _ := strconv.Atoi(cases[i][1])
 		str := rpad(cases[i][0], pad) + "x"
 		expected := cases[i][2]
@@ -118,7 +118,7 @@ func TestTrimRightSpace(t *testing.T) {
 		{"foo", "foox"},
 	}
 
-	for i := 0; i < len(cases); i++ {
+	for i := range cases {
 		str := trimRightSpace(cases[i][0]) + "x"
 		expected := cases[i][1]
 		assert.Equal(t, expected, str)
@@ -131,7 +131,7 @@ func TestMakeline(t *testing.T) {
 		{"foo bar", "*", "*******"},
 	}
 
-	for i := 0; i < len(cases); i++ {
+	for i := range cases {
 		str := makeline(cases[i][0], cases[i][1][0])
 		expected := cases[i][2]
 		assert.Equal(t, expected, str)

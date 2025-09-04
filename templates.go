@@ -14,6 +14,7 @@
 package cobraman
 
 import (
+	"maps"
 	"strings"
 	"text/template"
 )
@@ -46,9 +47,7 @@ func AddTemplateFunc(name string, tmplFunc any) {
 
 // AddTemplateFuncs adds multiple template functions that are available to doc templates.
 func AddTemplateFuncs(tmplFuncs template.FuncMap) {
-	for k, v := range tmplFuncs {
-		templateFuncs[k] = v
-	}
+	maps.Copy(templateFuncs, tmplFuncs)
 }
 
 // RegisterTemplate takes a template string creates a template for use with CobraMan.  It
