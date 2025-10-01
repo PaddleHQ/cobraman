@@ -129,7 +129,7 @@ jobs:
         if: |-
           steps.check-secret.outputs.can_automerge == 'true' &&
           github.event.inputs.workflow != ''
-        uses: wechuli/allcheckspassed@e22f45a4f25f4cf821d1273705ac233355400db1 # v1.2.0
+        uses: wechuli/allcheckspassed@5b5009ffd707b7c6759574c984bb666034b441eb # v2.0.0
         id: check-caller
         continue-on-error: true
         with:
@@ -141,7 +141,7 @@ jobs:
         if: |-
           steps.check-secret.outputs.can_automerge == 'true' &&
           steps.check-caller.outcome == 'success'
-        uses: wechuli/allcheckspassed@e22f45a4f25f4cf821d1273705ac233355400db1 # v1.2.0
+        uses: wechuli/allcheckspassed@5b5009ffd707b7c6759574c984bb666034b441eb # v2.0.0
         id: check-all
         continue-on-error: true
         with:
