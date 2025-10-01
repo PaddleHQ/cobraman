@@ -10,12 +10,12 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
   actions: write # required for `workflow-dispatch` to trigger the automerge workflow
+  contents: read
 
 jobs:
   check_build:
-    name: Run code validation checks
+    name: Ensure code can build
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)

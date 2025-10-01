@@ -27,8 +27,8 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
   checks: read
+  contents: read
   pull-requests: write
 
 jobs:
@@ -147,7 +147,7 @@ jobs:
         with:
           delay: '0'
           poll: false
-          checks_exclude: Apiiro,\[Automerge\/.*\].*
+          checks_exclude: \[Automerge\/.*\].*
 
       - name: "✅ Confirm Automerge Eligibility"
         id: check-failure
