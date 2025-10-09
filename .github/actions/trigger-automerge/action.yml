@@ -28,3 +28,15 @@ runs:
             "pr_number": "${{ fromJSON(inputs.event).pull_request.number }}",
             "workflow": "${{ github.workflow }}"
           }'
+
+    - name: Attempt to auto ready for review
+      if: fromJSON(inputs.event).pull_request.draft == true
+      uses: benc-uk/workflow-dispatch@e2e5e9a103e331dad343f381a29e654aea3cf8fc # v1.2.4
+      with:
+        workflow: auto-ready-for-review.yml
+        ref: ${{ github.head_ref || github.ref_name }}
+        inputs: '{
+            "pr_number": "${{ fromJSON(inputs.event).pull_request.number }}",
+            "head_sha": "${{ fromJSON(inputs.event).pull_request.head.sha }}",
+            "workflow": "${{ github.workflow }}"
+          }'
