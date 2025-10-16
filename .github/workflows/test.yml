@@ -76,7 +76,7 @@ jobs:
             ./...
 
       - name: Convert test reports to CTRF
-        if: failure()
+        if: always()
         run: |
           cat test-report.json | go-ctrf-json-reporter -quiet -output test-ctrf-report.json || true
 
@@ -88,8 +88,8 @@ jobs:
         with:
           report-path: test-ctrf-report.json
           pull-request-report: true
-          on-fail-only: true
           overwrite-comment: true
+          comment-tag: '${{ github.workflow }}-${{ github.event.pull_request.number }}'
 
       - name: Remove mocks from coverage
         run: grep -v -e ".\.pb\.go" -e "/mocks" cover.out > cover.filtered.out
