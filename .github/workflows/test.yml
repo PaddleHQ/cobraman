@@ -20,7 +20,7 @@ permissions:
 jobs:
   test:
     name: Run tests and validate coverage
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
@@ -41,32 +41,62 @@ jobs:
           private-key: ${{ secrets.PRIVATE_GO_CI_PRIVATE_KEY }}
 
       - name: Cache test results
-        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: |
             ~/.cache/go-build
+            ~/go/pkg/mod
           key: ${{ runner.os }}-go-test-${{ hashFiles('**/go.sum') }}-${{ hashFiles('**/*.go') }}
           restore-keys: |
             ${{ runner.os }}-go-test-${{ hashFiles('**/go.sum') }}-
             ${{ runner.os }}-go-test-
 
-      - name: Run tests with coverage
+      - name: Install test dependencies
         run: |
-          go test ./... \
+          go install gotest.tools/gotestsum@v1.13.0
+          go install github.com/ctrf-io/go-ctrf-json-reporter/cmd/go-ctrf-json-reporter@v0.0.11
+
+      - name: Setup test databases
+        uses: ./.github/actions/setup-databases
+
+      - name: Run tests with coverage
+        timeout-minutes: 20
+        run: |
+          gotestsum \
+            --format testname \
+            --jsonfile test-report.json \
+            -- \
             -v \
             -coverprofile=cover.out \
             -covermode=atomic \
             -coverpkg ./... \
             -race \
             -buildvcs=true \
-            -shuffle=on
+            -shuffle=on \
+            ./...
+
+      - name: Convert test reports to CTRF
+        if: always()
+        run: |
+          cat test-report.json | go-ctrf-json-reporter -quiet -output test-ctrf-report.json || true
+
+      - name: Publish Test Report
+        if: always()
+        uses: ctrf-io/github-test-reporter@4aa364ece313afe163161b9902cab898899ee59d # v1.0.23
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          report-path: test-ctrf-report.json
+          pull-request-report: true
+          overwrite-comment: true
+          comment-tag: '${{ github.workflow }}-${{ github.event.pull_request.number }}'
 
       - name: Remove mocks from coverage
         run: grep -v -e ".\.pb\.go" -e "/mocks" cover.out > cover.filtered.out
 
       - name: Get total coverage
         run: |
-          echo "TOTAL_COVERAGE=`go tool cover -func cover.filtered.out | grep total | awk '{print substr($3, 1, length($3)-3)}'`" \
+          echo "TOTAL_COVERAGE=`go tool cover -func cover.filtered.out | tail -n 1 | awk '{print substr($3, 1, length($3)-3)}'`" \
             >> $GITHUB_ENV
 
       - name: Read build config
