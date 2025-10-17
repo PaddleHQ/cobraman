@@ -61,6 +61,8 @@ jobs:
 
       - name: Run tests with coverage
         timeout-minutes: 20
+        env:
+          ENVIRONMENT: ci
         run: |
           gotestsum \
             --format testname \
@@ -82,7 +84,7 @@ jobs:
 
       - name: Publish Test Report
         if: always()
-        uses: ctrf-io/github-test-reporter@4aa364ece313afe163161b9902cab898899ee59d # v1.0.23
+        uses: ctrf-io/github-test-reporter@9bd31188517cfb3ff683f135041cc3bfbb0c78b3 # v1.0.25
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
