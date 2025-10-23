@@ -3,6 +3,7 @@
 name: Create release on push to main branch
 
 on:
+  pull_request:
   push:
     branches:
       - main
@@ -24,7 +25,8 @@ jobs:
           egress-policy: audit
 
       - name: Create release based on label
-        uses: rymndhng/release-on-push-action@aebba2bbce07a9474bf95e8710e5ee8a9e922fe2 # v0.28.0
+        uses: step-security/release-on-push-action@08626d15319527b7fedbcc91e33f46223054d85d # v0.28.3
         with:
           bump_version_scheme: norelease
           use_github_release_notes: true
+          dry_run: ${{ format('refs/heads/{0}', github.event.repository.default_branch) != github.ref }}

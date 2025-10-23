@@ -14,7 +14,7 @@ runs:
       run: |
         HAS_TESTAMENT=$(go list -m all | grep 'github.com/PaddleHQ/go-testament ' || echo "")
 
-        if [[ ${HAS_TESTAMENT} -eq "" ]]; then
+        if [[ "${HAS_TESTAMENT}" -eq "" ]]; then
           echo "imported=false" >> $GITHUB_OUTPUT
         else
           echo "imported=true" >> $GITHUB_OUTPUT
