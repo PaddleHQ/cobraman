@@ -25,7 +25,7 @@ jobs:
           egress-policy: audit
 
       - name: Create release based on label
-        uses: step-security/release-on-push-action@08626d15319527b7fedbcc91e33f46223054d85d # v0.28.3
+        uses: step-security/release-on-push-action@a316bfbcd30285e92688f3300f6270d6579e8b75 # v0.28.4
         with:
           bump_version_scheme: norelease
           use_github_release_notes: true
