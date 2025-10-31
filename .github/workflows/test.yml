@@ -40,6 +40,16 @@ jobs:
           private: ${{ github.event.repository.private }}
           private-key: ${{ secrets.PRIVATE_GO_CI_PRIVATE_KEY }}
 
+      - name: Download external dependencies
+        run: |
+          yq '.externalDependencies | @tsv' < build-config.yaml | # Read build config
+            tail -n +2 |                                          # Remove header row
+            while IFS=$'\t' read -r source target; do             # Read each line
+              echo "Copying from ${source} to ${target}"          # Log action
+              mkdir -p $(dirname "$target")                       # Ensure target directory exists
+              curl -L -o "${target}" "${source}"                  # Copy the file
+            done
+
       - name: Cache test results
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
@@ -64,6 +74,12 @@ jobs:
         env:
           ENVIRONMENT: ci
         run: |
+          yq '.env | to_entries | @tsv' < build-config.yaml | # Read build config
+            tail -n +2 |
+            while IFS=$'\t' read -r source target; do
+                export ${target}=${source}
+            done
+
           gotestsum \
             --format testname \
             --jsonfile test-report.json \
