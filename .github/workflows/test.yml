@@ -69,17 +69,19 @@ jobs:
       - name: Setup test databases
         uses: ./.github/actions/setup-databases
 
+      - name: Setup Env
+        run: |
+          yq '.env | to_entries | @tsv' < build-config.yaml |
+            tail -n +2 |
+            while IFS=$'\t' read -r source target; do
+                echo "${source}=${target}" >> $GITHUB_ENV
+            done
+
       - name: Run tests with coverage
         timeout-minutes: 20
         env:
           ENVIRONMENT: ci
         run: |
-          yq '.env | to_entries | @tsv' < build-config.yaml | # Read build config
-            tail -n +2 |
-            while IFS=$'\t' read -r source target; do
-                export ${target}=${source}
-            done
-
           gotestsum \
             --format testname \
             --jsonfile test-report.json \
