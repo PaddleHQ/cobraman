@@ -20,6 +20,12 @@ runs:
           echo "imported=true" >> $GITHUB_OUTPUT
         fi
 
+    - name: Read build config
+      id: build_config
+      uses: pietrobolcato/action-read-yaml@9f13718d61111b69f30ab4ac683e67a56d254e1d # 1.1.0
+      with:
+        config: ${{ github.workspace }}/build-config.yaml
+
     - name: Start PostgreSQL
       if: steps.go_testament.outputs.imported == 'true'
       shell: bash
@@ -36,12 +42,6 @@ runs:
 
         echo "TESTAMENT_POSTGRES_16_DSN=host=localhost port=5432 user=runner password=hunter2 dbname=testdatabase sslmode=require" >> $GITHUB_ENV
 
-    - name: Read build config
-      id: build_config
-      uses: pietrobolcato/action-read-yaml@9f13718d61111b69f30ab4ac683e67a56d254e1d # 1.1.0
-      with:
-        config: ${{ github.workspace }}/build-config.yaml
-
     - name: Start MySQL
       if: steps.build_config.outputs['enableMySQL'] == 'true'
       shell: bash
@@ -52,5 +52,5 @@ runs:
         sudo mysql --user=root --password=root -e "CREATE DATABASE testdatabase;"
         sudo mysql --user=root --password=root -e "FLUSH PRIVILEGES;"
 
-        echo "TESTAMENT_MYSQL_8_DSN=runner:hunter2@tcp(localhost:3306)/testdatabase?tls=true" >> $GITHUB_ENV
+        echo "TESTAMENT_MYSQL_8_DSN=runner:hunter2@tcp(127.0.0.1:3306)/testdatabase?tls=false" >> $GITHUB_ENV
 
