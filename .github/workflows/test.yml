@@ -7,6 +7,9 @@ on:
 
 env:
   TARGET_COVERAGE_DIFF: 5
+  # Required to enable support for synctest.Run
+  # This will be removed once we update to go 1.25
+  GOEXPERIMENT: synctest
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
