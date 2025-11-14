@@ -67,7 +67,7 @@ jobs:
       - name: Install test dependencies
         run: |
           go install gotest.tools/gotestsum@v1.13.0
-          go install github.com/ctrf-io/go-ctrf-json-reporter/cmd/go-ctrf-json-reporter@v0.0.11
+          go install github.com/ctrf-io/go-ctrf-json-reporter/cmd/go-ctrf-json-reporter@v0.0.12
 
       - name: Setup test databases
         uses: ./.github/actions/setup-databases
