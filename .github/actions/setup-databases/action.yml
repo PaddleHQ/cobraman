@@ -40,6 +40,9 @@ runs:
         sudo -u postgres psql -c "CREATE USER runner WITH SUPERUSER CREATEDB REPLICATION PASSWORD 'hunter2'"
         sudo -u postgres psql -c "CREATE DATABASE testdatabase WITH OWNER runner"
 
+        echo "TESTAMENT_POSTGRES_DSN=host=localhost port=5432 user=runner password=hunter2 dbname=testdatabase sslmode=require" >> $GITHUB_ENV
+
+        # deprecated, can be removed once all repos have updated to `go-testament` >= v3.3
         echo "TESTAMENT_POSTGRES_16_DSN=host=localhost port=5432 user=runner password=hunter2 dbname=testdatabase sslmode=require" >> $GITHUB_ENV
 
     - name: Start MySQL
