@@ -71,6 +71,8 @@ jobs:
 
       - name: Install editorconfig-checker
         uses: editorconfig-checker/action-editorconfig-checker@d2ed4fd072ae6f887e9407c909af0f585d2ad9f4 # v2
+        with:
+          version: v3.4.1
 
       - name: Validate editorconfig
         run: editorconfig-checker
