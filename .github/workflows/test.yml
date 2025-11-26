@@ -133,7 +133,7 @@ jobs:
           echo "TARGET_COVERAGE=$(( \
                 ${{ steps.build_config.outputs['requiredCoverage'] || 100 }} \
                 + \
-                ${{ env.TARGET_COVERAGE_DIFF }} \
+                ${TARGET_COVERAGE_DIFF} \
               ))" >> $GITHUB_ENV
 
       - name: Ensure coverage is good
@@ -144,7 +144,7 @@ jobs:
           message: |
             > [!CAUTION]
             > ## :cry: Coverage is too low :cry:
-            > Total coverage is `${{ env.TOTAL_COVERAGE }}%` but the required coverage is `${{ steps.build_config.outputs['requiredCoverage'] || 100 }}%`.
+            > Total coverage is `${TOTAL_COVERAGE}%` but the required coverage is `${{ steps.build_config.outputs['requiredCoverage'] || 100 }}%`.
 
               Please add additional tests to increase coverage.
 
@@ -161,7 +161,7 @@ jobs:
             > [!TIP]
             > ## :heart_eyes: Coverage has improved  :heart_eyes:
             > You may want to update the coverage configuration in `./build-config.yaml` to:
-              `requiredCoverage: ${{ env.TOTAL_COVERAGE }}`
+              `requiredCoverage: ${TOTAL_COVERAGE}`
 
               ```diff
               diff --git a/build-config.yaml b/build-config.yaml
@@ -169,7 +169,7 @@ jobs:
               +++ b/build-config.yaml
               @@ -1,1 +1,1 @@
               -requiredCoverage: ${{ steps.build_config.outputs['requiredCoverage'] || 100 }}
-              +requiredCoverage: ${{ env.TOTAL_COVERAGE }}
+              +requiredCoverage: ${TOTAL_COVERAGE}
               ```
 
       - name: Automerge

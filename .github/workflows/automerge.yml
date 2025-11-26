@@ -46,8 +46,10 @@ jobs:
           egress-policy: audit
 
       - name: Check sender
+        env:
+          SENDER: ${{ github.event.sender.login }}
         run: |
-          if [[ ${{ github.event.sender.login }} != 'github-actions[bot]' ]]; then
+          if [[ "${SENDER}" != 'github-actions[bot]' ]]; then
             echo "❌ This action can not be triggered by a user"
             exit 1
           fi
