@@ -157,7 +157,7 @@ jobs:
 
       - name: Check for multiple major versions of dependencies
         run: |
-          if git diff --quiet origin/${{ github.event.repository.default_branch }} -- 'go.mod'; then
+          if git diff --quiet "origin/${{ github.event.repository.default_branch }}" -- 'go.mod'; then
             echo "No changes in go.mod - skipping validation of major changes"
             exit 0
           fi
@@ -181,8 +181,8 @@ jobs:
 
           if [ -n "${DUPLICATES}" ]; then
             echo "${DUPLICATES}" | while read -r line ; do
-                LINE=$(echo $line | cut -f1 -d ' ')
-                REPO=$(echo $line | cut -f2 -d ' ')
+                LINE=$(echo "$line" | cut -f1 -d ' ')
+                REPO=$(echo "$line" | cut -f2 -d ' ')
 
                 cat <<- EOF
           ::error file=go.mod,line=${LINE},endLine=${LINE},title=Duplicate dependencies::There are multiple \
