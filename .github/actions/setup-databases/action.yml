@@ -15,9 +15,9 @@ runs:
         HAS_TESTAMENT=$(go list -m all | grep 'github.com/PaddleHQ/go-testament ' || echo "")
 
         if [[ "${HAS_TESTAMENT}" -eq "" ]]; then
-          echo "imported=false" >> $GITHUB_OUTPUT
+          echo "imported=false" >> "$GITHUB_OUTPUT"
         else
-          echo "imported=true" >> $GITHUB_OUTPUT
+          echo "imported=true" >> "$GITHUB_OUTPUT"
         fi
 
     - name: Read build config
@@ -40,10 +40,10 @@ runs:
         sudo -u postgres psql -c "CREATE USER runner WITH SUPERUSER CREATEDB REPLICATION PASSWORD 'hunter2'"
         sudo -u postgres psql -c "CREATE DATABASE testdatabase WITH OWNER runner"
 
-        echo "TESTAMENT_POSTGRES_DSN=host=localhost port=5432 user=runner password=hunter2 dbname=testdatabase sslmode=require" >> $GITHUB_ENV
+        echo "TESTAMENT_POSTGRES_DSN=host=localhost port=5432 user=runner password=hunter2 dbname=testdatabase sslmode=require" >> "$GITHUB_ENV"
 
         # deprecated, can be removed once all repos have updated to `go-testament` >= v3.3
-        echo "TESTAMENT_POSTGRES_16_DSN=host=localhost port=5432 user=runner password=hunter2 dbname=testdatabase sslmode=require" >> $GITHUB_ENV
+        echo "TESTAMENT_POSTGRES_16_DSN=host=localhost port=5432 user=runner password=hunter2 dbname=testdatabase sslmode=require" >> "$GITHUB_ENV"
 
     - name: Start MySQL
       if: steps.build_config.outputs['enableMySQL'] == 'true'
@@ -55,5 +55,5 @@ runs:
         sudo mysql --user=root --password=root -e "CREATE DATABASE testdatabase;"
         sudo mysql --user=root --password=root -e "FLUSH PRIVILEGES;"
 
-        echo "TESTAMENT_MYSQL_8_DSN=runner:hunter2@tcp(127.0.0.1:3306)/testdatabase?tls=false" >> $GITHUB_ENV
+        echo "TESTAMENT_MYSQL_8_DSN=runner:hunter2@tcp(127.0.0.1:3306)/testdatabase?tls=false" >> "$GITHUB_ENV"
 

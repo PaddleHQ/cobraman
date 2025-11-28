@@ -66,11 +66,11 @@ jobs:
         run: |
           PR=`gh pr view ${{ github.event.inputs.pr_number }} --json isDraft,author,labels,headRefName,baseRefName`
 
-          echo "draft=`echo ${PR} | jq -r '.isDraft'`" >> $GITHUB_OUTPUT
-          echo "user_login=`echo ${PR} | jq -r '.author.login'`" >> $GITHUB_OUTPUT
-          echo "labels=`echo ${PR} | jq -r '.labels | map(.name) | join(",")'`" >> $GITHUB_OUTPUT
-          echo "head_ref=`echo ${PR} | jq -r '.headRefName'`" >> $GITHUB_OUTPUT
-          echo "base_ref=`echo ${PR} | jq -r '.baseRefName'`" >> $GITHUB_OUTPUT
+          echo "draft=`echo ${PR} | jq -r '.isDraft'`" >> "$GITHUB_OUTPUT"
+          echo "user_login=`echo ${PR} | jq -r '.author.login'`" >> "$GITHUB_OUTPUT"
+          echo "labels=`echo ${PR} | jq -r '.labels | map(.name) | join(",")'`" >> "$GITHUB_OUTPUT"
+          echo "head_ref=`echo ${PR} | jq -r '.headRefName'`" >> "$GITHUB_OUTPUT"
+          echo "base_ref=`echo ${PR} | jq -r '.baseRefName'`" >> "$GITHUB_OUTPUT"
 
       - name: "📥 Checkout PR Code"
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
@@ -87,7 +87,7 @@ jobs:
           # Get the merge base to determine the changes made in the PR compared to when it was branched from the
           # default branch, instead of the diff to the default branch.
           mergeBase=`git merge-base origin/${{ steps.pr-info.outputs.base_ref }} HEAD`
-          echo "merge_base=${mergeBase}" >> $GITHUB_OUTPUT
+          echo "merge_base=${mergeBase}" >> "$GITHUB_OUTPUT"
 
     outputs:
       draft: ${{ steps.pr-info.outputs.draft }}
@@ -124,7 +124,7 @@ jobs:
             echo "❌ No automerge secret found - automerge disabled"
           else
             echo "✅ Automerge secret available"
-            echo "can_automerge=true" >> $GITHUB_OUTPUT
+            echo "can_automerge=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: "🔄 Wait for calling workflow to be ready"
@@ -159,7 +159,7 @@ jobs:
           steps.check-all.outcome == 'success'
         run: |
           echo "✅ All checks passed - automerge enabled"
-          echo "can_automerge=true" >> $GITHUB_OUTPUT
+          echo "can_automerge=true" >> "$GITHUB_OUTPUT"
 
     outputs:
       can_automerge: ${{ steps.check-secret.outputs.can_automerge && steps.check-failure.outputs.can_automerge }}
@@ -198,12 +198,12 @@ jobs:
           echo "🔍 Checking dependency changes in go.mod..."
           if git diff --quiet ${{ needs.pr_info.outputs.merge_base }} -- 'go.mod'; then
             echo "ℹ️ No changes in go.mod - automerge not enabled. Requires manual review"
-            echo "can_automerge=false" >> $GITHUB_OUTPUT
+            echo "can_automerge=false" >> "$GITHUB_OUTPUT"
           elif git diff --quiet -G "github.com/PaddleHQ/" ${{ needs.pr_info.outputs.merge_base }} -- go.mod; then
             echo "⚠️ No PaddleHQ dependencies updated - automerge not enabled. Requires manual review"
           else
             echo "✅ PaddleHQ dependencies updated - automerge enabled"
-            echo "can_automerge=true" >> $GITHUB_OUTPUT
+            echo "can_automerge=true" >> "$GITHUB_OUTPUT"
           fi
 
     outputs:
@@ -244,7 +244,7 @@ jobs:
           # Check if only safe files were modified (workflows and dependabot config)
           if git diff --quiet ${{ needs.pr_info.outputs.merge_base }} -- ':!.github/actions' ':!.github/workflows' ':!.github/dependabot.yml' ':!.github/pull_request_template.md' ':!.github/release.yml'; then
             echo "✅ Only safe template files modified (workflows/dependabot) - automerge enabled"
-            echo "can_automerge=true" >> $GITHUB_OUTPUT
+            echo "can_automerge=true" >> "$GITHUB_OUTPUT"
           else
             echo "⚠️ Updates to non-standard files - automerge not enabled. Requires manual review"
           fi
@@ -295,7 +295,7 @@ jobs:
             echo "⚠️ Files deleted - automerge not enabled. Needs manual review"
           else
             echo "✅ No files deleted (only additions/modifications) - automerge enabled"
-            echo "can_automerge=true" >> $GITHUB_OUTPUT
+            echo "can_automerge=true" >> "$GITHUB_OUTPUT"
           fi
 
     outputs:
