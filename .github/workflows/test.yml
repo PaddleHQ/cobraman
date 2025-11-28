@@ -77,7 +77,7 @@ jobs:
           yq '.env | to_entries | @tsv' < build-config.yaml |
             tail -n +2 |
             while IFS=$'\t' read -r source target; do
-                echo "${source}=${target}" >> $GITHUB_ENV
+                echo "${source}=${target}" >> "$GITHUB_ENV"
             done
 
       - name: Run tests with coverage
@@ -120,7 +120,7 @@ jobs:
       - name: Get total coverage
         run: |
           echo "TOTAL_COVERAGE=`go tool cover -func cover.filtered.out | tail -n 1 | awk '{print substr($3, 1, length($3)-3)}'`" \
-            >> $GITHUB_ENV
+            >> "$GITHUB_ENV"
 
       - name: Read build config
         id: build_config
@@ -134,7 +134,7 @@ jobs:
                 ${{ steps.build_config.outputs['requiredCoverage'] || 100 }} \
                 + \
                 ${TARGET_COVERAGE_DIFF} \
-              ))" >> $GITHUB_ENV
+              ))" >> "$GITHUB_ENV"
 
       - name: Ensure coverage is good
         uses: thollander/actions-comment-pull-request@24bffb9b452ba05a4f3f77933840a6a841d1b32b # v3

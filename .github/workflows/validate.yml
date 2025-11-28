@@ -180,7 +180,7 @@ jobs:
           )
 
           if [ -n "${DUPLICATES}" ]; then
-            echo "${DUPLICATES}" | while read line ; do
+            echo "${DUPLICATES}" | while read -r line ; do
                 LINE=$(echo $line | cut -f1 -d ' ')
                 REPO=$(echo $line | cut -f2 -d ' ')
 
