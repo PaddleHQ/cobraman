@@ -45,10 +45,10 @@ jobs:
 
           # Get changed files using git diff
           echo "Getting changed files from git diff..."
-          mergeBase=`git merge-base origin/${{ github.event.pull_request.base.ref }} HEAD`
+          merge_base=$(git merge-base origin/${{ github.event.pull_request.base.ref }} HEAD)
 
-          echo "Merge base: $mergeBase"
-          changed_files=$(git diff --name-only --merge-base $mergeBase)
+          echo "Merge base: $merge_base"
+          changed_files=$(git diff --name-only --merge-base "$merge_base")
 
           if [[ -z "$changed_files" ]]; then
             echo "No changed files found."

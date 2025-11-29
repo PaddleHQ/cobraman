@@ -38,11 +38,11 @@ jobs:
           # 1. Use git diff --shortstat to calculate all changed lines
           # 2. Exclude go.mod, go.sum and mocks
           # 3. Use awk to sum the added and deleted lines to get total lines changed
-          LINES_CHANGED=`git diff --shortstat origin/${{ github.event.pull_request.base.ref }} -- \
+          LINES_CHANGED=$(git diff --shortstat origin/${{ github.event.pull_request.base.ref }} -- \
             ':!go.mod' \
             ':!go.sum' \
             ':!*/mocks/*' \
-            | awk '{files+=$1; inserted+=$4; deleted+=$6} END {print inserted+deleted}'`
+            | awk '{files+=$1; inserted+=$4; deleted+=$6} END {print inserted+deleted}')
           echo "total=${LINES_CHANGED}" >> "$GITHUB_OUTPUT"
 
       - name: Label PR with size
@@ -58,14 +58,16 @@ jobs:
               -q '.labels[].name | select(. | startswith("size/"))' \
             | xargs -I {} gh pr edit ${{ github.event.pull_request.number }} --remove-label {}
 
+          changed_lines=${{ steps.lines_changed.outputs.total }}
+
           SIZE=""
-          if [ ${{ steps.lines_changed.outputs.total }} -lt 50 ]; then
+          if [ "${changed_lines}" -lt 50 ]; then
             SIZE="xs"
-          elif [ ${{ steps.lines_changed.outputs.total }} -lt 100 ]; then
+          elif [ "${changed_lines}" -lt 100 ]; then
             SIZE="s"
-          elif [ ${{ steps.lines_changed.outputs.total }} -lt 500 ]; then
+          elif [ "${changed_lines}" -lt 500 ]; then
             SIZE="m"
-          elif [ ${{ steps.lines_changed.outputs.total }} -lt 1000 ]; then
+          elif [ "${changed_lines}" -lt 1000 ]; then
             SIZE="l"
           else
             SIZE="xl"

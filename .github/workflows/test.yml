@@ -45,11 +45,13 @@ jobs:
 
       - name: Download external dependencies
         run: |
+          output_dir=$(dirname "${target}")
+
           yq '.externalDependencies | @tsv' < build-config.yaml | # Read build config
             tail -n +2 |                                          # Remove header row
             while IFS=$'\t' read -r source target; do             # Read each line
               echo "Copying from ${source} to ${target}"          # Log action
-              mkdir -p $(dirname "$target")                       # Ensure target directory exists
+              mkdir -p "${output_dir}"                            # Ensure target directory exists
               curl -L -o "${target}" "${source}"                  # Copy the file
             done
 
@@ -67,7 +69,7 @@ jobs:
       - name: Install test dependencies
         run: |
           go install gotest.tools/gotestsum@v1.13.0
-          go install github.com/ctrf-io/go-ctrf-json-reporter/cmd/go-ctrf-json-reporter@v0.0.12
+          go install github.com/ctrf-io/go-ctrf-json-reporter/cmd/go-ctrf-json-reporter@v0.0.14
 
       - name: Setup test databases
         uses: ./.github/actions/setup-databases
@@ -119,7 +121,7 @@ jobs:
 
       - name: Get total coverage
         run: |
-          echo "TOTAL_COVERAGE=`go tool cover -func cover.filtered.out | tail -n 1 | awk '{print substr($3, 1, length($3)-3)}'`" \
+          echo "TOTAL_COVERAGE=$(go tool cover -func cover.filtered.out | tail -n 1 | awk '{print substr($3, 1, length($3)-3)}')" \
             >> "$GITHUB_ENV"
 
       - name: Read build config
@@ -133,7 +135,7 @@ jobs:
           echo "TARGET_COVERAGE=$(( \
                 ${{ steps.build_config.outputs['requiredCoverage'] || 100 }} \
                 + \
-                ${TARGET_COVERAGE_DIFF} \
+                TARGET_COVERAGE_DIFF \
               ))" >> "$GITHUB_ENV"
 
       - name: Ensure coverage is good
@@ -144,7 +146,7 @@ jobs:
           message: |
             > [!CAUTION]
             > ## :cry: Coverage is too low :cry:
-            > Total coverage is `${TOTAL_COVERAGE}%` but the required coverage is `${{ steps.build_config.outputs['requiredCoverage'] || 100 }}%`.
+            > Total coverage is `${{ env.TOTAL_COVERAGE }}%` but the required coverage is `${{ steps.build_config.outputs['requiredCoverage'] || 100 }}%`.
 
               Please add additional tests to increase coverage.
 

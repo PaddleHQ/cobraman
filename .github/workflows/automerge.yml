@@ -64,13 +64,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          PR=`gh pr view ${{ github.event.inputs.pr_number }} --json isDraft,author,labels,headRefName,baseRefName`
+          PR=$(gh pr view ${{ github.event.inputs.pr_number }} --json isDraft,author,labels,headRefName,baseRefName)
 
-          echo "draft=`echo ${PR} | jq -r '.isDraft'`" >> "$GITHUB_OUTPUT"
-          echo "user_login=`echo ${PR} | jq -r '.author.login'`" >> "$GITHUB_OUTPUT"
-          echo "labels=`echo ${PR} | jq -r '.labels | map(.name) | join(",")'`" >> "$GITHUB_OUTPUT"
-          echo "head_ref=`echo ${PR} | jq -r '.headRefName'`" >> "$GITHUB_OUTPUT"
-          echo "base_ref=`echo ${PR} | jq -r '.baseRefName'`" >> "$GITHUB_OUTPUT"
+          {
+            echo "draft=$(echo "${PR}" | jq -r '.isDraft')"
+            echo "user_login=$(echo "${PR}" | jq -r '.author.login')"
+            echo "labels=$(echo "${PR}" | jq -r '.labels | map(.name) | join(",")')"
+            echo "head_ref=$(echo "${PR}" | jq -r '.headRefName')"
+            echo "base_ref=$(echo "${PR}" | jq -r '.baseRefName')"
+          } >> "$GITHUB_OUTPUT"
 
       - name: "📥 Checkout PR Code"
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
@@ -86,7 +88,7 @@ jobs:
         run: |
           # Get the merge base to determine the changes made in the PR compared to when it was branched from the
           # default branch, instead of the diff to the default branch.
-          mergeBase=`git merge-base origin/${{ steps.pr-info.outputs.base_ref }} HEAD`
+          mergeBase=$(git merge-base origin/${{ steps.pr-info.outputs.base_ref }} HEAD)
           echo "merge_base=${mergeBase}" >> "$GITHUB_OUTPUT"
 
     outputs:

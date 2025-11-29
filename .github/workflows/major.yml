@@ -48,7 +48,8 @@ jobs:
         run: |
           # mockery v2 is ignored while we make a decision on how we upgrade.
           # see https://paddle.slack.com/archives/CCALA6J23/p1744297603199989
-          export PATH=${PATH}:`go env GOPATH`/bin
+          go_path=$(go env GOPATH)
+          export PATH=${PATH}:${go_path}/bin
           {
             echo 'major_dependencies<<EOF'
             gomajor list -major -pre | grep -v github.com/vektra/mockery/v2 | awk '{print "> "$0}'
