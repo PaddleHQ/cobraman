@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@df199fb7be9f65074067a9eb93f12bb4c5547cf2 # v2.13.3
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
         with:
           egress-policy: audit
 
@@ -49,15 +49,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # 1. get all labels
-          # 2. Extract the label name
-          # 3. Filter by size/*
-          # 4. remove it
-          gh pr view ${{ github.event.pull_request.number }} \
-              --json labels \
-              -q '.labels[].name | select(. | startswith("size/"))' \
-            | xargs -I {} gh pr edit ${{ github.event.pull_request.number }} --remove-label {}
-
           changed_lines=${{ steps.lines_changed.outputs.total }}
 
           SIZE=""
@@ -72,6 +63,15 @@ jobs:
           else
             SIZE="xl"
           fi
+
+          # 1. get all labels
+          # 2. Extract the label name
+          # 3. Filter by size/* and not the current size
+          # 4. remove it
+          gh pr view ${{ github.event.pull_request.number }} \
+              --json labels \
+              -q ".labels[].name | select(. | startswith(\"size/\") and . != \"${SIZE}\")" \
+            | xargs -I {} gh pr edit ${{ github.event.pull_request.number }} --remove-label {}
 
           # Create the label if it doesn't exist
           gh label create --repo ${{ github.repository }} "size/${SIZE}" || true
