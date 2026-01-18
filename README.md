@@ -1,10 +1,10 @@
 # Generating Documentation For Your cobra.Command
 ![Image of Cobra Man](https://raw.githubusercontent.com/rayjohnson/cobraman/master/cobra-man.jpeg)
 
-This is a replacement for the man generator used by spf13/cobra.  The code in spf13/cobra/doc has different generators that hard-code what gets output for man pages, markdown, etc.  It
-also calls a lot of other 3rd party libraries.  This package uses the Go template facility
-to generate documentation.  It is much more powerful and flexible thus giving a lot more
-control over the format and style of documentation you would like to generate.
+This is a replacement for the man generator used by spf13/cobra. The code in spf13/cobra/doc has different generators 
+that hard-code what gets output for man pages, markdown, etc. It  also calls a lot of other 3rd party libraries. 
+This package uses the Go template facility to generate documentation. It is much more powerful and flexible thus 
+giving a lot more control over the format and style of documentation you would like to generate.
 
 Here is a simple example to get you started:
 
@@ -38,9 +38,11 @@ func main() {
 
 That will get you a man page `/tmp/dofoo.1`
 
-GoDoc has the full API documentation [here](https://godoc.org/github.com/PaddleHQ/cobraman).  Be sure to checkout the documentation for CobraManOptions as it provides many options to control the output.
+GoDoc has the full API documentation [here](https://godoc.org/github.com/PaddleHQ/cobraman). Be sure to check out the 
+documentation for CobraManOptions as it provides many options to control the output.
 
-There is also an example directory with a simple dummy application that shows some of the features of this package.  See the [README](example/README.md).
+There is also an example directory with a simple dummy application that shows some of the features of this package. 
+See the [README](example/README.md).
 
 ## Annotations
 
@@ -48,7 +50,7 @@ This library uses the Annotations fields cobra.Cmd and pFlag to give some hints 
 generation of the documentation.
 
 The following annotations on the cobra.Command object provides a way to provide content
-for additional sections in the man page.  The first three override the global Options in 
+for additional sections in the man page. The first three override the global Options in 
 case you want some of these sections only on some command man pages.
 * man-files-section
 * man-bugs-section
@@ -69,8 +71,8 @@ Here is an example of how you can set the annotations on the command:
 In addition, there is an annotation you can put on individual flags:
 * man-arg-hints
 
-This provides a way to give a short description to the value expected by an flag.  This
-is used by the built-in template in the OPTIONS section.  For example, setting the
+This provides a way to give a short description to the value expected by an flag. This
+is used by the built-in template in the OPTIONS section. For example, setting the
 annotation like this:
 ```go
 	annotation := []string{"path"}
@@ -84,7 +86,9 @@ Will generate a option description like this:
 
 ## Templates
 
-Cobra Man uses Go templates to generate the documentation.  You can replace the template used by setting the **TemplateName** variable in CobraManOptions.  A couple of templates are defined that can be used out of the box.  They include:
+Cobra Man uses Go templates to generate the documentation. You can replace the template used by setting the 
+**TemplateName** variable in CobraManOptions. A couple of templates are defined that can be used out of the box. 
+They include:
 
 * "troff" - which generates a man page with basic troff macros
 * "mdoc" - which generates a man page using the mdoc macro package
