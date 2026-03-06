@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: read # Read access to the repository contents is required to read the Markdown files.
+  actions: write # required for `workflow-dispatch` to trigger the automerge workflow
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
@@ -41,3 +42,11 @@ jobs:
         with:
           notion-token: ${{ secrets.NOTION_ACCESS_TOKEN }}
           dry-run: ${{ format('refs/heads/{0}', github.event.repository.default_branch) != github.ref }}
+
+      - name: Automerge
+        if: format('refs/heads/{0}', github.event.repository.default_branch) != github.ref
+        uses: ./.github/actions/trigger-automerge
+        with:
+          event: ${{ toJSON(github.event) }}
+          hasAutoApproverPrivateKey: ${{ secrets.AUTO_APPROVER_PRIVATE_KEY != '' }}
+
