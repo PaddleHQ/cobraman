@@ -59,6 +59,8 @@ jobs:
             ${{ runner.os }}-go-validate-
 
       - name: Install `govulncheck`, `gopls`, `modfmt` and `ghokin`
+        env:
+          GOEXPERIMENT: "" # go install below can trigger a toolchain switch to a version where synctest is no longer a valid GOEXPERIMENT
         run: |
           for cmd in govulncheck modernize modfmt ghokin; do
             command -v "$cmd" >/dev/null || install_all=1
